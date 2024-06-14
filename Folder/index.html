@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YouTube Downloader</h1>
+        <input type="text" id="videoUrl" placeholder="Enter YouTube video URL">
+        <select id="format">
+            <option value="mp4">MP4</option>
+            <option value="mp3">MP3</option>
+            <option value="avi">AVI</option>
+            <option value="mov">MOV</option>
+            <option value="flv">FLV</option>
+        </select>
+        <button onclick="downloadVideo()">Download</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function downloadVideo() {
+            const videoUrl = document.getElementById('videoUrl').value;
+            const format = document.getElementById('format').value;
+            if (!videoUrl) {
+                document.getElementById('message').textContent = 'Please enter a valid URL.';
+                return;
+            }
+
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: videoUrl, format: format })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `video.${format}`; // Dynamically set the filename and extension
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.getElementById('message').textContent = 'Download started';
+            })
+            .catch(error => {
+                document.getElementById('message').textContent = 'An error occurred';
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

